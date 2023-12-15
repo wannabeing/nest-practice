@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Movie } from './entities/movie.entity';
+import { CreateMovieDTO } from './dto/create-movie.dto';
+import { UpdateMovieDTO } from './dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {
@@ -11,7 +13,7 @@ export class MoviesService {
     return this.movies;
   }
   // [GET] 영화 1개
-  getMovie(mid: string): Movie {
+  getMovie(mid: number): Movie {
     const movie = this.movies.find((movie) => movie.mid === +mid);
     if (movie) {
       return movie;
@@ -20,14 +22,14 @@ export class MoviesService {
     }
   }
   // [CREATE] 영화 1개
-  createMovie(movieData) {
+  createMovie(movieData: CreateMovieDTO) {
     this.movies.push({
       mid: this.movies.length + 1,
       ...movieData,
     });
   }
   // [UPDATE] 영화1개
-  updateMovie(mid: string, updateData) {
+  updateMovie(mid: number, updateData: UpdateMovieDTO) {
     // mid가 존재하지 않으면 getMovie에서 throw Error
     const movie = this.getMovie(mid);
 
@@ -38,16 +40,16 @@ export class MoviesService {
     });
   }
   // [SEARCH] 영화 1개
-  searchMovie(year: string): Movie[] {
-    return this.movies.filter((movie) => movie.year === +year);
+  searchMovie(year: number): Movie[] {
+    return this.movies.filter((movie) => movie.year === year);
   }
 
   // [DELETE] 영화 1개
-  delMovie(mid: string): boolean {
+  delMovie(mid: number): boolean {
     // mid가 존재하지 않으면 getMovie에서 throw Error
     this.getMovie(mid);
 
-    this.movies = this.movies.filter((movie) => movie.mid !== +mid);
+    this.movies = this.movies.filter((movie) => movie.mid !== mid);
     return true;
   }
 }
